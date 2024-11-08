@@ -3,7 +3,7 @@ package org.example
 import org.http4k.sse.Sse
 import org.http4k.sse.SseMessage
 
-class SseConnections(private val map: MutableMap<String, Set<Sse>> = mutableMapOf()) {
+class SseConnectionService(private val map: MutableMap<String, Set<Sse>> = mutableMapOf()) {
     fun addConnection(name: String, sse: Sse) {
         val conns = map[name] ?: emptyList()
         map[name] = (conns + sse).toSet()

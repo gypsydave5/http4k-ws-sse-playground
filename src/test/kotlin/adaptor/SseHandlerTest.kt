@@ -1,6 +1,7 @@
 package adaptor
 
-import org.example.SseConnections
+import org.example.SseConnectionService
+import org.example.SseMessageSender
 import org.example.adaptor.sseHandler
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -11,21 +12,18 @@ import kotlin.test.Test
 class SseHandlerTest {
     @Test
     fun `it does server side event stuff`() {
-        val connections = SseConnections()
+        val connections = SseConnectionService()
+        val messageSender = SseMessageSender(connections)
         val handler = sseHandler(connections)
 
         val client = handler.testSseClient(Request(Method.GET, "/sse/12345"))
 
-        val event = SseMessage.Event("poop", "da woop")
-
-        connections.send(event)
+        messageSender.send("this is a message")
 
         client.close()
 
         val received = client.received().toList()
-
-        assert(received.isNotEmpty())
-        assert(received.size == 1)
-        assert(received.first() == event)
+        val expectedMessage = SseMessage.Event("message", "this is a message")
+        assert(received.first() == expectedMessage)
     }
 }

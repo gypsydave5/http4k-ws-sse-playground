@@ -1,5 +1,7 @@
-package org.example
+package org.example.app
 
+import org.example.SseConnectionService
+import org.example.SseMessageSender
 import org.example.adaptor.sseHandler
 import org.http4k.core.Request
 import org.http4k.lens.Path
@@ -9,7 +11,6 @@ import org.http4k.routing.ws.bind as bindWs
 import org.http4k.server.PolyHandler
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
-import org.http4k.sse.*
 import org.http4k.websocket.Websocket
 import org.http4k.websocket.WsMessage
 import org.http4k.websocket.WsResponse
@@ -20,7 +21,8 @@ val namePath = Path.of("name")
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
-    val sseConnections = SseConnections()
+    val sseConnectionService = SseConnectionService()
+    val messageSender = SseMessageSender(sseConnectionService)
 
 
     val ws = websockets(
@@ -44,19 +46,13 @@ fun main() {
     )
 
 
-    val sse = sseHandler(sseConnections)
+    val sse = sseHandler(sseConnectionService)
 
     val http = static(Directory("src/main/resources/web"))
 
 
     PolyHandler(http, ws = ws, sse = sse).asServer(Undertow(9000)).start()
 
-    thread {
-        while (true) {
-            print("send sse event: ")
-            val message = readln()
-            sseConnections.send(SseMessage.Event("event", message))
-        }
-    }
+    thread { cli(messageSender) }
 }
 
