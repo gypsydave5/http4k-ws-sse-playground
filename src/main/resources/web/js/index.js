@@ -1,5 +1,4 @@
 import testSse  from './sse.js'
-import testWebSocket from './websocket.js'
 
 import requestPermissionForNotificationsApi from './notificationPermission.js'
 

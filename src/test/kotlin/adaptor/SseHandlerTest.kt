@@ -6,9 +6,7 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.sse.SseMessage
 import org.http4k.testing.testSseClient
-import java.lang.Thread.sleep
 import kotlin.test.Test
-import kotlin.test.assertFalse
 
 class SseHandlerTest {
     @Test
