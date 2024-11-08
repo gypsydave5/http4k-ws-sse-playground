@@ -10,7 +10,7 @@ fun cli(messageSender: SseMessageSender, connectionService: SseConnectionService
         println()
         print("send sse event: ")
         val message = readln()
-        messageSender.send(message)
+        messageSender.sendToAll(message)
         println()
     }
 }
