@@ -1,9 +1,6 @@
-console.log("hello")
+const myUserId = crypto.randomUUID()
 
-new Notification("pooop")
-
-
-eventSource = new EventSource(`//localhost:9000/sse/serviceWorker`)
+eventSource = new EventSource(`//localhost:9000/sse/${myUserId}`)
 
 eventSource.onmessage = function (e) {
     console.log(`Received ${JSON.stringify(e.data)}`)
