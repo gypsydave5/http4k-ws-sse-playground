@@ -53,6 +53,6 @@ fun main() {
 
     PolyHandler(http, ws = ws, sse = sse).asServer(Undertow(9000)).start()
 
-    thread { cli(messageSender) }
+    thread { cli(messageSender, sseConnectionService) }
 }
 

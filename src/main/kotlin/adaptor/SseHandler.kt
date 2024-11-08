@@ -16,11 +16,6 @@ fun sseHandler(sseConnectionService: SseConnectionService) = sse(
             sseConnectionService.addConnection(namePath(req), sse)
 
             println("connection $name has been added\n")
-
-            sse.onClose {
-                println("\n\n!!! $name is closing !!!\n\n")
-                sseConnectionService.removeConnection(name, sse)
-            }
         }
     }
 )

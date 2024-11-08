@@ -5,6 +5,8 @@ import org.http4k.sse.SseMessage
 
 class SseConnectionService(private val map: MutableMap<String, Set<Sse>> = mutableMapOf()) {
     fun addConnection(name: String, sse: Sse) {
+        sse.onClose { removeConnection(name, sse) }
+
         val conns = map[name] ?: emptyList()
         map[name] = (conns + sse).toSet()
     }
@@ -23,4 +25,11 @@ class SseConnectionService(private val map: MutableMap<String, Set<Sse>> = mutab
     fun send(event: SseMessage.Event) {
         map.values.flatten().forEach { it.send(event) }
     }
+
+    override fun toString(): String {
+        return map.entries.joinToString ("\n") { (k, v) ->
+            k + ": [ " + v.joinToString(",") { it.hashCode().toString() } + " ]"
+        }
+    }
 }
+
